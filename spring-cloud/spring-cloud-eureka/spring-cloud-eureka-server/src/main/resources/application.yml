@@ -1,7 +1,12 @@
 server:
   port: 8761
 
-eureka:
-  client:
+eureka:  client:
     registerWithEureka: false
     fetchRegistry: false
+  server:    renewal-percent-threshold: 0.45
+    renewal-threshold-update-interval-ms: 2000
+    
+logging:
+  level:
+    root: DEBUG

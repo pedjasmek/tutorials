@@ -9,3 +9,14 @@ eureka:
   client:
     serviceUrl:
       defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}
+      
+hystrix:
+   metrics:
+     enabled: true
+     polling-interval-ms: 10000
+  
+logging:
+  level:
+    root: DEBUG
+    
+management:  endpoints:    web:      exposure:        include:        - hystrix.stream
