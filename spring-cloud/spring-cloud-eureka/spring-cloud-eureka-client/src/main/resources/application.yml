@@ -14,6 +14,7 @@ eureka:
     lease-renewal-interval-in-seconds: 1
     preferIpAddress: true
     instance-id: spring-cloud-eureka-client-${random.value}
+    prefer-ip-address: true
     
 logging:
   level:

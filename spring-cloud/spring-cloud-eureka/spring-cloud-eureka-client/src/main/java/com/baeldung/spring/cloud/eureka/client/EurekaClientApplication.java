@@ -18,16 +18,13 @@ public class EurekaClientApplication implements GreetingController {
 	@Value("${spring.application.name}")
 	private String appName;
 
-	@Value("${eureka.instance.instance-id}")
-	private String instanceId;
-
 	public static void main(String[] args) {
 		SpringApplication.run(EurekaClientApplication.class, args);
 	}
 
 	@Override
 	public String greeting() {
-		return String.format("Hello from '%s'!",
-				eurekaClient.getApplication(appName).getName() + " wiht ID: " + instanceId);
+		return String.format("Hello from '%s'!", eurekaClient.getApplication(appName).getName() + " wiht ID: "
+				+ eurekaClient.getApplicationInfoManager().getInfo().getInstanceId());
 	}
 }
