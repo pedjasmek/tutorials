@@ -7,6 +7,8 @@ import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.cloud.netflix.hystrix.dashboard.EnableHystrixDashboard;
 import org.springframework.cloud.openfeign.EnableFeignClients;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +21,7 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 @EnableFeignClients
 @EnableHystrixDashboard
 @EnableCircuitBreaker
+@EnableResourceServer
 @Controller
 public class FeignClientApplication {
 	@Autowired
@@ -29,11 +32,15 @@ public class FeignClientApplication {
 
 	@Autowired
 	private DiscoveryClient discoveryClient;
+	
+	@Autowired
+	private CustomUserDetailsService userDetailsService;
 
 	public static void main(String[] args) {
 		SpringApplication.run(FeignClientApplication.class, args);
 	}
 
+	@PreAuthorize("hasAuthority('ROLE_CUSTOM_USER')")
 	@RequestMapping("/get-greeting")
 	@HystrixCommand(commandKey = "getGreeting", fallbackMethod = "getDefaultGreeting", commandProperties = {
 			@HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "3000") })

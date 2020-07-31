@@ -20,3 +20,28 @@ logging:
     root: DEBUG
     
 management:  endpoints:    web:      exposure:        include:        - hystrix.stream
+security:
+  oauth2:
+    sso:
+      loginPath: /login
+    client:
+      accessTokenUri: http://spring-cloud-eureka-oauth2/oauth/token
+      userAuthorizationUri: http://spring-cloud-eureka-oauth2/oauth/authorize
+      clientId: tutorialspoint
+      clientSecret: my-secret-key
+      scope: read write
+    resource:
+      userInfoUri: 
+      #id: read
+      #serviceId: ${PREFIX:}resource
+      jwt:
+        key-value: 
+          -----BEGIN PUBLIC KEY-----
+          MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAu4Eazef1o04iZHPLZack
+          nHQX1ECxLWUn5WHc937ypWlkWZHmTZnQWqS7mySooeJv+gKuiU3xr3jgzLl8LYAR
+          y1N77Rw6bvx4CKkgDK0G6SZExYt1Qc/Jq5GEmma0ob7S8hqCwFirI0+di83OaEHM
+          3qbGrNlsaGmfI8pWJG3CZMKqoAJhsz6f7TicXI8Wg+nbQI+lh7TFAWDIGUc/lxiO
+          NvRTeCfHvUmS0ip3XtPnkGGGtFcaa5PBVQ24EXjI63M8kCWW4wYMPJPa+idKaXrR
+          vML+cc6orfaJUhUqg8DpCJjccOpwyGfOxlSm09I7rF0RrejNS0R17jszZTiCkLqw
+          VwIDAQAB
+          -----END PUBLIC KEY-----
