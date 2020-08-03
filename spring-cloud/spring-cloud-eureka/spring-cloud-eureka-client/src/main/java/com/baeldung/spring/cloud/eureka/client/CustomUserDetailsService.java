@@ -1,4 +1,4 @@
-package com.baeldung.spring.cloud.feign.client;
+package com.baeldung.spring.cloud.eureka.client;
 
 import java.util.ArrayList;
 import java.util.Collection;

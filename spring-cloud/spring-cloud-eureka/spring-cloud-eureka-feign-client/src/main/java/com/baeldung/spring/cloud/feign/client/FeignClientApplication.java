@@ -7,11 +7,12 @@ import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.cloud.netflix.hystrix.dashboard.EnableHystrixDashboard;
 import org.springframework.cloud.openfeign.EnableFeignClients;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.netflix.discovery.EurekaClient;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
@@ -21,7 +22,7 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 @EnableFeignClients
 @EnableHystrixDashboard
 @EnableCircuitBreaker
-@EnableResourceServer
+//@EnableResourceServer
 @Controller
 public class FeignClientApplication {
 	@Autowired
@@ -32,20 +33,23 @@ public class FeignClientApplication {
 
 	@Autowired
 	private DiscoveryClient discoveryClient;
-	
+
 	@Autowired
-	private CustomUserDetailsService userDetailsService;
+	private OAuth2Client oauth2Client;
 
 	public static void main(String[] args) {
 		SpringApplication.run(FeignClientApplication.class, args);
 	}
 
-	@PreAuthorize("hasAuthority('ROLE_CUSTOM_USER')")
 	@RequestMapping("/get-greeting")
 	@HystrixCommand(commandKey = "getGreeting", fallbackMethod = "getDefaultGreeting", commandProperties = {
 			@HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "3000") })
 	public String getGreeting(Model model) {
-		model.addAttribute("greeting", greetingClient.getGreeting());
+		ResponseEntity<OAuth2AccessToken> tokenResponse = oauth2Client.getToken("password", "tutorialspoint",
+				"password", "Basic dHV0b3JpYWxzcG9pbnQ6bXktc2VjcmV0LWtleQ==");
+		String accessToken = tokenResponse.getBody().getValue();
+		String tokenType = tokenResponse.getBody().getTokenType();
+		model.addAttribute("greeting", greetingClient.getGreeting(tokenType + " " + accessToken));
 		return "greeting-view";
 	}
 
