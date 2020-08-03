@@ -20,6 +20,10 @@ logging:
     root: DEBUG
     
 management:  endpoints:    web:      exposure:        include:        - hystrix.stream
+        
+cache-config:
+  time-to-live-in-seconds: 60
+
 #security:
 #  oauth2:
 #    sso:
