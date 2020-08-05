@@ -2,6 +2,7 @@ package com.baeldung.spring.cloud.feign.client;
 
 import java.util.concurrent.TimeUnit;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
@@ -17,6 +18,9 @@ import com.google.common.cache.CacheBuilder;
 @EnableCaching
 class ClientCacheConfig extends CachingConfigurerSupport{
 
+	@Value("${cache-config.time-to-live-in-seconds}")
+	private int cacheTimeToLive;
+	
 	@Override
 	@Bean
 	public CacheManager cacheManager() {
@@ -25,7 +29,7 @@ class ClientCacheConfig extends CachingConfigurerSupport{
             @Override
             protected Cache createConcurrentMapCache(final String name) {
                 return new ConcurrentMapCache(name,
-                    CacheBuilder.newBuilder().expireAfterWrite(50, TimeUnit.SECONDS).maximumSize(100).build().asMap(), false);
+                    CacheBuilder.newBuilder().expireAfterWrite(cacheTimeToLive - 5, TimeUnit.SECONDS).maximumSize(100).build().asMap(), false);
             }
         };
 

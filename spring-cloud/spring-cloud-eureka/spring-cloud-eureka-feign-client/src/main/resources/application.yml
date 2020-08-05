@@ -1,7 +1,6 @@
 spring:
   application:
     name: spring-cloud-eureka-feign-client
-
 server:
   port: 8080
 
@@ -21,8 +20,8 @@ logging:
     
 management:  endpoints:    web:      exposure:        include:        - hystrix.stream
         
-cache-config:
-  time-to-live-in-seconds: 60
+#cache-config:
+#  time-to-live-in-seconds: 60
 
 #security:
 #  oauth2:
