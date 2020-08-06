@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
@@ -14,6 +15,7 @@ import com.netflix.discovery.EurekaClient;
 @SpringBootApplication
 @RestController
 @EnableResourceServer
+@EnableFeignClients
 public class EurekaClientApplication implements GreetingController {
 	@Autowired
 	@Lazy
