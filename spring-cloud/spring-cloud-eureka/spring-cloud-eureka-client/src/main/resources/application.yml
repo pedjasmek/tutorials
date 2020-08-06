@@ -22,18 +22,7 @@ logging:
     
 security:
   oauth2:
-    sso:
-      loginPath: /login
-    client:
-      accessTokenUri: http://spring-cloud-eureka-oauth2/oauth/token
-      userAuthorizationUri: http://spring-cloud-eureka-oauth2/oauth/authorize
-      clientId: tutorialspoint
-      clientSecret: my-secret-key
-      scope: read write
     resource:
-      userInfoUri: 
-      #id: read
-      #serviceId: ${PREFIX:}resource
       jwt:        key-value: 
           -----BEGIN PUBLIC KEY-----
           MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAu4Eazef1o04iZHPLZack
