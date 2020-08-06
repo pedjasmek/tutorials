@@ -4,4 +4,5 @@ spring:  profiles:    active:    - dev
       discovery:        enabled: true
         service-id: spring-cloud-eureka-config-server
       username: root
-      password: s3cr3t
+      password: '{cipher}AQCC+A9GQphzoXdpjymWjOnhanRGBTLqJ1IxX4jOM4cg5/h/4l9NW8GTW8fdNlgMcOE2eIiyEqrUWYkNeHfRShmGz9hslidYD6+jVQQsPSKdxU4CUiyGQzdIiBkrU80JmpMdmvqryRz9G5kT6qt63UGanzgHlrNnUZxKclMHx3qt4IUlkeSsUZQ3rfyWJcoOFlJu488e3DNF8UI2QbmSveztJhrj550kjXs1iBACOnmx/GB/tfUnZYPQr5z+Z9OmhqL6rd5tJNHBr0EGT3DlAcpV6R+ikUXImZAlX5D2hMoCBaUMygIHKUVJ4bBWqIaAV1rLEbzYQSVWoyq8BPkTINJLjSifo+BVvT8ABjYj53MUrDev0c5ymFWoIXUyf0rPRD8='
+encrypt:  keyStore:    location: classpath:/server.jks    password: letmein    alias: mytestkey    secret: changeme
