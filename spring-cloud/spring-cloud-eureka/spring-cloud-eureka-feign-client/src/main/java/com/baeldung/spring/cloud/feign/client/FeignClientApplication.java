@@ -51,7 +51,7 @@ public class FeignClientApplication {
 			@HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "3000") })
 	public String getGreeting(Model model) {
 		String accessToken = getAccessToken("password", "tutorialspoint",
-				"password", "Basic dHV0b3JpYWxzcG9pbnQ6bXktc2VjcmV0LWtleQ==");
+				"my-secret-key", "Basic dHV0b3JpYWxzcG9pbnQ6bXktc2VjcmV0LWtleQ==");
 		model.addAttribute("greeting", greetingClient.getGreeting("Bearer " + accessToken));
 		return "greeting-view";
 	}
