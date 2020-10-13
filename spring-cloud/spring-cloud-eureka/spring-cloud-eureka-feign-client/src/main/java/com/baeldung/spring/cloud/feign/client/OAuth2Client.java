@@ -4,6 +4,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,5 +19,5 @@ public interface OAuth2Client {
 			@RequestParam(name = "username") String username, //
 			@RequestParam(name = "password") String password, //
 			@RequestHeader(name = "Authorization") String authHeader); //
-
+	
 }

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 public class CustomUserDetailsService implements UserDetailsService {
 	
 	@Autowired
-	private UserDetailsClient userDetailsClient;
+	private Oauth2Client userDetailsClient;
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

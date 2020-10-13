@@ -9,7 +9,8 @@ import org.springframework.cloud.netflix.hystrix.dashboard.EnableHystrixDashboar
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
-import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,10 +27,10 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 @RestController
 public class FeignClientApplication {
 	@Autowired
-	private GreetingClient greetingClient;
+	private EurekaClient eurekaClient;
 
 	@Autowired
-	private EurekaClient eurekaClient;
+	private CloudEurekaClient cloudEurekaClient;
 
 	@Autowired
 	private DiscoveryClient discoveryClient;
@@ -45,14 +46,21 @@ public class FeignClientApplication {
 	@HystrixCommand(commandKey = "getGreeting", fallbackMethod = "getDefaultGreeting", commandProperties = {
 			@HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "3000") })
 	public String getGreeting() {
-		String accessToken = getAccessToken("password", "tutorialspoint",
-				"my-secret-key", "Basic dHV0b3JpYWxzcG9pbnQ6bXktc2VjcmV0LWtleQ==");
-		return greetingClient.getGreeting("Bearer " + accessToken);
+		String accessToken = getAccessToken("password", "tutorialspoint", "my-secret-key",
+				"Basic dHV0b3JpYWxzcG9pbnQ6bXktc2VjcmV0LWtleQ==");
+		return cloudEurekaClient.getGreeting("Bearer " + accessToken);
+	}
+	
+	@PostMapping("/addAuthority/{username}/{authority}")
+	public String addAuthorityForUser(@PathVariable String username, @PathVariable String authority) {
+		String accessToken = getAccessToken("password", "tutorialspoint", "my-secret-key",
+				"Basic dHV0b3JpYWxzcG9pbnQ6bXktc2VjcmV0LWtleQ==");
+		return cloudEurekaClient.addAuthorityForUser("Bearer " + accessToken, username, authority);
 	}
 
-	public String getAccessToken(String grantType, String username, String password, String authHeader) {
-		ResponseEntity<OAuth2AccessToken> tokenResponse = oauth2Client.getToken(grantType, username,
-				password, authHeader);
+	protected String getAccessToken(String grantType, String username, String password, String authHeader) {
+		ResponseEntity<OAuth2AccessToken> tokenResponse = oauth2Client.getToken(grantType, username, password,
+				authHeader);
 		return tokenResponse.getBody().getValue();
 	}
 
