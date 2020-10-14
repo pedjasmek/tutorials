@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.openfeign.EnableFeignClients;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
@@ -37,4 +38,5 @@ public class EurekaClientApplication implements GreetingController {
 		return String.format("Hello from '%s'!", eurekaClient.getApplication(appName).getName() + " wiht ID: "
 				+ eurekaClient.getApplicationInfoManager().getInfo().getInstanceId());
 	}
+	
 }
