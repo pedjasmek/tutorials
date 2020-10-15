@@ -8,6 +8,7 @@ import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.cloud.netflix.hystrix.dashboard.EnableHystrixDashboard;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -44,13 +45,14 @@ public class FeignClientApplication {
 
 	@RequestMapping("/get-greeting")
 	@HystrixCommand(commandKey = "getGreeting", fallbackMethod = "getDefaultGreeting", commandProperties = {
-			@HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "3000") })
+			@HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "3000") }, ignoreExceptions = {
+					AccessDeniedException.class })
 	public String getGreeting() {
 		String accessToken = getAccessToken("password", "tutorialspoint", "my-secret-key",
 				"Basic dHV0b3JpYWxzcG9pbnQ6bXktc2VjcmV0LWtleQ==");
 		return cloudEurekaClient.getGreeting("Bearer " + accessToken);
 	}
-	
+
 	@PostMapping("/addAuthority/{username}/{authority}")
 	public String addAuthorityForUser(@PathVariable String username, @PathVariable String authority) {
 		String accessToken = getAccessToken("password", "tutorialspoint", "my-secret-key",
