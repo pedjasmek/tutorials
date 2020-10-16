@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @FeignClient("spring-cloud-eureka-client")
 public interface CloudEurekaClient {
     @RequestMapping("/greeting")
-    String getGreeting(@RequestHeader(name = "Authorization") String accessToken);
+    String getGreeting(@RequestHeader(name = "Authorization") String authorization);
     
     @PostMapping("/authorities/add/{username}/{authority}")
-	String addAuthorityForUser(@RequestHeader(name = "Authorization") String accessToken, //
+	String addAuthorityForUser(@RequestHeader(name = "Authorization") String authorization, //
 									  @PathVariable(name = "username") String username,//
 									  @PathVariable(name = "authority") String authority); //
 }

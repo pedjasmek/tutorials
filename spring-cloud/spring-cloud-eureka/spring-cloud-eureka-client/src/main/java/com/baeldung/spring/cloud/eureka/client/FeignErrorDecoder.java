@@ -21,18 +21,19 @@ public class FeignErrorDecoder implements ErrorDecoder {
 	public Exception decode(String methodKey, Response response) {
 
 		switch (response.status()) {
-		case 403: {
+		case org.apache.http.HttpStatus.SC_BAD_REQUEST:
+		{
 			try {
-				return new AccessDeniedException(response.body() == null ? HttpStatus.FORBIDDEN.getReasonPhrase()
-						: IOUtils.toString(response.body().asReader()));
+				return new ResponseStatusException(HttpStatus.valueOf(response.status()),
+						IOUtils.toString(response.body().asReader()));
 			} catch (IOException e) {
 				logger.error(e.getMessage());
 			}
 		}
-		case 400: {
+		case org.apache.http.HttpStatus.SC_FORBIDDEN: {
 			try {
-				return new ResponseStatusException(HttpStatus.valueOf(response.status()),
-						IOUtils.toString(response.body().asReader()));
+				return new AccessDeniedException(response.body() == null ? HttpStatus.FORBIDDEN.getReasonPhrase()
+						: IOUtils.toString(response.body().asReader()));
 			} catch (IOException e) {
 				logger.error(e.getMessage());
 			}

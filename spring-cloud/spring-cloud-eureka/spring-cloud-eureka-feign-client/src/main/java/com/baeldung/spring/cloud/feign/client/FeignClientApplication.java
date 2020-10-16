@@ -12,8 +12,10 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.netflix.discovery.EurekaClient;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
@@ -46,18 +48,18 @@ public class FeignClientApplication {
 	@RequestMapping("/get-greeting")
 	@HystrixCommand(commandKey = "getGreeting", fallbackMethod = "getDefaultGreeting", commandProperties = {
 			@HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "3000") }, ignoreExceptions = {
-					AccessDeniedException.class })
-	public String getGreeting() {
-		String accessToken = getAccessToken("password", "tutorialspoint", "my-secret-key",
-				"Basic dHV0b3JpYWxzcG9pbnQ6bXktc2VjcmV0LWtleQ==");
-		return cloudEurekaClient.getGreeting("Bearer " + accessToken);
+					AccessDeniedException.class, ResponseStatusException.class })
+	public String getGreeting(@RequestHeader(name = "Authorization") String authorization) {
+		return cloudEurekaClient.getGreeting(authorization);
 	}
 
+	@HystrixCommand(commandKey = "addAuthorityForUser", fallbackMethod = "addAuthorityFallback", commandProperties = {
+			@HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "3000") }, ignoreExceptions = {
+					AccessDeniedException.class, ResponseStatusException.class })
 	@PostMapping("/addAuthority/{username}/{authority}")
-	public String addAuthorityForUser(@PathVariable String username, @PathVariable String authority) {
-		String accessToken = getAccessToken("password", "tutorialspoint", "my-secret-key",
-				"Basic dHV0b3JpYWxzcG9pbnQ6bXktc2VjcmV0LWtleQ==");
-		return cloudEurekaClient.addAuthorityForUser("Bearer " + accessToken, username, authority);
+	public String addAuthorityForUser(@RequestHeader(name = "Authorization") String authorization,
+			@PathVariable String username, @PathVariable String authority) {
+		return cloudEurekaClient.addAuthorityForUser(authorization, username, authority);
 	}
 
 	protected String getAccessToken(String grantType, String username, String password, String authHeader) {
@@ -65,8 +67,14 @@ public class FeignClientApplication {
 				authHeader);
 		return tokenResponse.getBody().getValue();
 	}
+	
+	protected String addAuthorityFallback(@RequestHeader(name = "Authorization") String authorization,
+			@PathVariable String username, @PathVariable String authority) {
+		return "Authority " + authority + " for user " + username + " not added."
+				+ "\nCheck service availability!";
+	}
 
-	public String getDefaultGreeting() {
+	protected String getDefaultGreeting(@RequestHeader(name = "Authorization") String authorization) {
 		return "DEFAULT GREETING";
 	}
 }
