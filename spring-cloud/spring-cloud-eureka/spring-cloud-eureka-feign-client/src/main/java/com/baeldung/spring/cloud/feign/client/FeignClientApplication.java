@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -62,16 +63,18 @@ public class FeignClientApplication {
 		return cloudEurekaClient.addAuthorityForUser(authorization, username, authority);
 	}
 
-	protected String getAccessToken(String grantType, String username, String password, String authHeader) {
+	@PostMapping("/token")
+	public String getAccessToken(@RequestParam(name = "grant_type") String grantType,
+			@RequestParam(name = "username") String username, @RequestParam(name = "password") String password,
+			@RequestHeader(name = "Authorization") String authHeader) {
 		ResponseEntity<OAuth2AccessToken> tokenResponse = oauth2Client.getToken(grantType, username, password,
 				authHeader);
 		return tokenResponse.getBody().getValue();
 	}
-	
+
 	protected String addAuthorityFallback(@RequestHeader(name = "Authorization") String authorization,
 			@PathVariable String username, @PathVariable String authority) {
-		return "Authority " + authority + " for user " + username + " not added."
-				+ "\nCheck service availability!";
+		return "Authority " + authority + " for user " + username + " not added." + "\nCheck service availability!";
 	}
 
 	protected String getDefaultGreeting(@RequestHeader(name = "Authorization") String authorization) {
